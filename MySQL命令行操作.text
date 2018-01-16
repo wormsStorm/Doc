@@ -1,0 +1,193 @@
+MySql 常见SQL语句写法
+
+创建数据库
+create database 数据库名称;
+
+运行数据库脚本
+source 文件名.sql;
+
+修改编码
+1.创建数据库时设置编码
+
+create database 数据库名 character set utf8;
+
+2.创建表时设置编码
+
+create table 表名(id int primary key)DEFAULT charset=utf8;
+
+3.修改数据库编码
+
+alter database 数据名 character set utf8;
+
+4.修改表默认编码
+
+alter table 表名 character set utf8;
+
+5.修改字段编码
+
+alter table 表名 modify 字段名 数据类型(varchar(50)) CHARACTER SET utf8;
+
+
+常见的表操作
+
+1.删除表(首先会判断表是否存在)
+
+DROP TABLE IF EXISTS 表名;
+
+2.创建表
+CREATE TABLE 表名(
+ id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,-- 主键
+ uid INT(11) NOT NULL DEFAULT 0,    # 创建者id
+ context VARCHAR(600) NOT NULL DEFAULT '',  # 公告详细内容（300字）
+ begintime DEC(20) NOT NULL DEFAULT 0,   # 公告开始时间
+ endtime DEC(20) NOT NULL DEFAULT 0,   # 公告结束时间
+ createtime DEC(20) NOT NULL DEFAULT 0,   # 创建时间
+ modifytime DEC(20) NOT NULL DEFAULT 0   # 修改时间
+ PRIMARY KEY (`Id`),
+)DEFAULT CHARSET=UTF8 TYPE=INNODB;
+
+3.修改原有字段名称及类型：
+ALTER TABLE 表名 CHANGE 原字段名 新字段名 数据类型(例如:VARCHAR(50)) NOT NULL DEFAULT '';
+
+
+给表字段添加索引
+添加常见的索引
+1.添加PRIMARY KEY（主键索引）
+
+ALTER TABLE `表名` ADD PRIMARY KEY (`字段名`);
+
+2.添加UNIQUE(唯一索引)
+
+ALTER TABLE `表名` ADD UNIQUE (`字段名`);
+
+3.添加INDEX(普通索引)
+ALTER TABLE `表名` ADD INDEX index_name (`字段名`);
+
+
+4.添加FULLTEXT(全文索引)
+ALTER TABLE `表名` ADD FULLTEXT (`字段名`);
+
+5.添加多列索引
+ALTER TABLE `表名` ADD INDEX index_name (`字段名1`,`字段名2`,`字段名3`);
+
+
+MySQL 修改字段类型或长度
+alter table 表名 modify column 字段名 类型;
+例如
+数据库中address表 city字段是varchar(30)
+
+修改类型可以用（谨慎修改类型，可能会导致原有数据出错）
+
+mysql> alter table address modify column city char(30);
+
+修改长度可以用（修改长度，要保证不短于已有数据，以保证原有数据不出错）
+
+mysql> alter table address modify column city varchar(50);
+
+修改是否非空
+
+mysql> alter table address modify column city varchar(50) not null;
+
+mysql> alter table address modify column city varchar(50) null;
+
+MySQL命令行删除表中的一个字段
+执行删除命令，使用drop关键字。
+基本的语法为：alter table <表名> drop column <字段名>;
+
+
+一、清除mysql表中数据
+delete from 表名;
+truncate table 表名;
+不带where参数的delete语句可以删除mysql表中所有内容
+使用truncate table也可以清空mysql表中所有内容。
+
+效率上truncate比delete快，但truncate删除后不记录mysql日志，不可以恢复数据。
+delete的效果有点像将mysql表中所有记录一条一条删除到删完，
+而truncate相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。
+
+二、删除表中的某些数据
+
+delete from 命令格式：delete from 表名 where 表达式
+
+例如，删除表 MyClass中编号为1 的记录：
+mysql> delete from MyClass where id=1;
+
+三、修改表
+1.选择数据库
+
+>use 数据库名;
+
+2.查询所有数据表
+>show tables;
+
+3.查询表的字段信息
+>desc 表名称;
+
+3.1.修改某个表的字段类型及指定为空或非空
+>alter table 表名称 change 字段名称 字段名称 字段类型 [是否允许非空];
+>alter table 表名称 modify 字段名称 字段类型 [是否允许非空];
+
+3.2.修改某个表的字段名称及指定为空或非空
+>alter table 表名称 change 字段原名称 字段新名称 字段类型 [是否允许非空];
+
+例如:
+修改表expert_info中的字段birth,允许其为空
+
+>alter table expert_info change birth birth varchar(20) null;
+
+1.增加一个字段(一列)
+
+alter table table_name add column column_name type default value; type指该字段的类型,value指该字段的默认值
+alter table mybook add column publish_house varchar(10) default ”;
+
+2.更改一个字段名字(也可以改变类型和默认值)
+
+alter table table_name change sorce_col_name dest_col_name type default value; source_col_name指原来的字段名称,dest_col_name 指改后的字段名称
+
+alter table Board_Info change IsMobile IsTelphone int(3) unsigned default 1;
+
+3.改变一个字段的默认值
+
+alter table table_name alter column_name set default value;
+
+alter table book alter flag set default '0′;
+
+4.改变一个字段的数据类型
+
+alter table table_name change column column_name column_name type;
+
+alter table userinfo change column username username varchar(20);
+
+5.向一个表中增加一个列做为主键
+
+alter table table_name add column column_name type auto_increment PRIMARY KEY;
+
+alter table book add column id int(10) auto_increment PRIMARY KEY;
+
+6.数据库某表的备份,在命令行中输入:
+
+mysqldump -u root -p database_name table_name > bak_file_name
+
+mysqldump -u root -p f_info user_info > user_info.dat
+
+7.导出数据
+
+select_statment into outfile”dest_file”;
+
+select cooperatecode,createtime from publish limit 10 into outfile”/home/mzc/temp/tempbad.txt”;
+
+8.导入数据
+
+load data infile”file_name” into table table_name;
+
+load data infile”/home/mzc/temp/tempbad.txt” into table pad;
+
+9.将两个表里的数据拼接后插入到另一个表里。 下面的例子说明将t1表中的com2和t2表中的com1字段的值拼接后插入到tx表对应的
+
+insert into tx select t1.com1,concat(t1.com2,t2.com1) from t1,t2;
+
+10,删除字段
+alter table form1 drop column 列名;
+
+
+如何备份数据库,运行SQL文件???

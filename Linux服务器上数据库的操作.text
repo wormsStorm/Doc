@@ -1,0 +1,4 @@
+ show databases;展示数据库
+ use intelligent_seat;使用指定的数据库
+ show tables;显示数据库中的表格
+ 

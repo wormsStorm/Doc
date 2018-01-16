@@ -1,0 +1,22 @@
+
+查看MySQL数据库当前的字符集:show VARIABLES like 'character%';
+
+服务器类型: MySQL
+主机名或 IP 地址:192.168.2.54
+端口:3306
+数据库名称:intelligent_seat
+用户名:dbkj
+密码:dbkj123
+编码:Unicode (UTF-8)
+版本:5.7.20
+
+
+
+
+
+
+编码: Unicode (UTF-8)
+Enable MySQL character set: 是
+Use compression: 否
+
+
